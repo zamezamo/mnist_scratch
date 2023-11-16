@@ -23,7 +23,7 @@ for i in range(10):
         ax[i][j].xaxis.set_visible(False)
         ax[i][j].yaxis.set_visible(False)
 
-plt.show()
+
 
 test_images = mnist.test_images().tolist()
 test_labels = mnist.test_labels().tolist()
@@ -82,16 +82,27 @@ def loop(model: Layer,
 
             avg_loss = total_loss / (i + 1)
             acc = correct / (i + 1)
-            t.set_description(f"р-е рукопис. цифр, потеря: {avg_loss:.3f}, точн.: {acc:.3f}")
+            t.set_description(f"number predictions, loss: {avg_loss:.3f}, acc.: {acc:.3f}")
 
 
 from linear_layer import Linear
+from sequential_layer import Sequential
+from dropout_layer import Dropout
+from sigmoid_layer import Sigmoid
 from sse_loss import SSE
 from momentum import Momentum
 
 random.seed(0)
 
-model = Linear(784, 10)
+model = Sequential([
+    Linear(784, 30),
+    Dropout(0.1),
+    Sigmoid(),
+    Linear(30, 10),
+    Dropout(0.1),
+    Sigmoid(),
+    Linear(10, 10)
+])
 loss = SSE()
 optimizer = Momentum(learning_rate=0.01, momentum=0.99)
 
