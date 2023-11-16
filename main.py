@@ -88,22 +88,33 @@ def loop(model: Layer,
 from linear_layer import Linear
 from sequential_layer import Sequential
 from dropout_layer import Dropout
-from sigmoid_layer import Sigmoid
+from tanh_layer import Tanh
 from sse_loss import SSE
 from momentum import Momentum
 
 random.seed(0)
 
+dropout1 = Dropout(0.1)
+dropout2 = Dropout(0.1)
+
 model = Sequential([
     Linear(784, 30),
-    Dropout(0.1),
-    Sigmoid(),
+    dropout1,
+    Tanh(),
     Linear(30, 10),
-    Dropout(0.1),
-    Sigmoid(),
+    dropout2,
+    Tanh(),
     Linear(10, 10)
 ])
 loss = SSE()
 optimizer = Momentum(learning_rate=0.01, momentum=0.99)
 
+# train
+dropout1.train = True
+dropout2.train = True
 loop(model, train_images, train_labels, loss, optimizer)
+
+# test
+dropout1.train = False
+dropout2.train = False
+loop(model, test_images, test_labels, loss)
