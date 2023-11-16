@@ -14,7 +14,7 @@ class Sequential(Layer):
     
     def backward(self, gradient):
         for layer in reversed(self.layers):
-            gradient = layer.bacward(gradient)
+            gradient = layer.backward(gradient)
         return gradient
     
     def params(self) -> Iterable[Tensor]:
